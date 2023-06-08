@@ -95,4 +95,36 @@ describe("JobListings", () => {
       expect(nextText).toBeInTheDocument();
     });
   });
+
+  describe("quando o usuário está na última página", () => {
+    it("não mostra o botão Próxima", async () => {
+      (axios.get as Mock).mockResolvedValue({ data: Array(15).fill({}) });
+      const queryParams = { query: { page: "2" } };
+      const $route = createRoute(queryParams);
+
+      renderJobListings($route);
+
+      await screen.findAllByRole("listitem");
+      const nextText = screen.queryByRole("link", {
+        name: /próxima/i
+      });
+
+      expect(nextText).not.toBeInTheDocument();
+    });
+
+    it("mostra o botão Anterior", async () => {
+      (axios.get as Mock).mockResolvedValue({ data: Array(15).fill({}) });
+      const queryParams = { query: { page: "2" } };
+      const $route = createRoute(queryParams);
+
+      renderJobListings($route);
+
+      await screen.findAllByRole("listitem");
+      const previousText = screen.queryByRole("link", {
+        name: /anterior/i
+      });
+
+      expect(previousText).toBeInTheDocument();
+    });
+  });
 });
