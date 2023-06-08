@@ -13,8 +13,21 @@ export default {
     };
   },
   computed: {
+    currentPage() {
+      return Number.parseInt((this.$route.query.page as string) || "1");
+    },
+    previousPage() {
+      const firstPage = 1;
+      const previousPage = this.currentPage - 1;
+      return previousPage >= firstPage ? previousPage : undefined;
+    },
+    nextPage() {
+      const nextPage = this.currentPage + 1;
+      const maxPage = this.jobs.length / 10;
+      return nextPage <= maxPage ? nextPage : undefined;
+    },
     displayedJobs() {
-      const pageNumber = (this.$route.query.page as unknown as number) || 1;
+      const pageNumber = this.currentPage;
       const firstJobIdx = (pageNumber - 1) * 10;
       const lastJobIdx = pageNumber * 10;
       return this.jobs.slice(firstJobIdx, lastJobIdx);
@@ -32,5 +45,27 @@ export default {
     <ol>
       <job-listing v-for="(job, idx) in displayedJobs" :key="idx" :job="job" />
     </ol>
+    <div class="mx-auto mt-8">
+      <div class="flex flex-row flex-nowrap">
+        <p class="flex-grow text-sm">Page {{ currentPage }}</p>
+        <div class="flex items-center justify-center">
+          <router-link
+            v-if="previousPage"
+            :to="{ name: 'Vagas', query: { page: previousPage } }"
+            class="mx-3 text-sm font-semibold text-brand-blue-1"
+          >
+            Anterior
+          </router-link>
+
+          <router-link
+            v-if="nextPage"
+            :to="{ name: 'Vagas', query: { page: nextPage } }"
+            class="mx-3 text-sm font-semibold text-brand-blue-1"
+          >
+            Próxima
+          </router-link>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
