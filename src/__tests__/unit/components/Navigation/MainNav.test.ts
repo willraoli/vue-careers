@@ -1,15 +1,19 @@
 import MainNav from "@/components/Navigation/MainNav.vue";
-import { render, screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { render, screen } from "@testing-library/vue";
 import { RouterLinkStub } from "@vue/test-utils";
+import { createTestingPinia } from "@pinia/testing";
 
 const renderMainNav = () => {
+  const pinia = createTestingPinia({ stubActions: false });
+
   const $route = {
     name: "Vagas"
   };
 
   render(MainNav, {
     global: {
+      plugins: [pinia],
       mocks: { $route },
       stubs: {
         IconifyIcon: true,
