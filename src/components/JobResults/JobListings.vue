@@ -1,18 +1,15 @@
 <script lang="ts">
 import JobListing from "@/components/JobResults/JobListing.vue";
-import axios from "axios";
+import { useJobsStore, FETCH_JOBS } from "@/stores/jobs";
+import { mapActions, mapState } from "pinia";
 
 export default {
   name: "JobListings",
   components: {
     JobListing
   },
-  data() {
-    return {
-      jobs: []
-    };
-  },
   computed: {
+    ...mapState(useJobsStore, ["jobs"]),
     currentPage() {
       return Number.parseInt((this.$route.query.page as string) || "1");
     },
@@ -34,8 +31,10 @@ export default {
     }
   },
   async mounted() {
-    const res = await axios.get("http://localhost:3000/jobs");
-    this.jobs = res.data;
+    this[FETCH_JOBS]();
+  },
+  methods: {
+    ...mapActions(useJobsStore, [FETCH_JOBS])
   }
 };
 </script>
