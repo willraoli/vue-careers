@@ -2,6 +2,8 @@
 import ActionButton from "@/components/Shared/ActionButton.vue";
 import ProfileImage from "@/components/Navigation/ProfileImage.vue";
 import SubNav from "@/components/Navigation/SubNav.vue";
+import { useUserStore } from "@/stores/user";
+import { mapActions, mapState } from "pinia";
 
 export default {
   name: "MainNav",
@@ -18,11 +20,11 @@ export default {
         { label: "Locais", href: "/" },
         { label: "Alunos", href: "/" },
         { label: "Vagas", href: "/vagas/resultados" }
-      ],
-      isLoggedIn: false
+      ]
     };
   },
   computed: {
+    ...mapState(useUserStore, ["isLoggedIn"]),
     headerHeightClass() {
       return {
         "h-16": !this.isLoggedIn,
@@ -31,9 +33,7 @@ export default {
     }
   },
   methods: {
-    login() {
-      this.isLoggedIn = !this.isLoggedIn;
-    }
+    ...mapActions(useUserStore, ["loginUser"])
   }
 };
 </script>
@@ -55,8 +55,8 @@ export default {
           </ul>
         </nav>
         <div class="ml-auto flex h-full items-center">
-          <profile-image v-if="isLoggedIn" @click="login" />
-          <action-button v-else type="primary" text="Fazer login" @click="login" />
+          <profile-image v-if="isLoggedIn" @click="loginUser" />
+          <action-button v-else type="primary" text="Fazer login" @click="loginUser" />
         </div>
       </div>
       <sub-nav v-if="isLoggedIn" />
