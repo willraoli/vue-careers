@@ -20,7 +20,7 @@ export default {
           <action-button text="Limpar filtros" type="secondary" />
         </div>
       </div>
-      <collapsible-accordion>
+      <collapsible-accordion header="Empresas">
         <div class="mt-5">
           <fieldset>
             <ul class="flex flex-grow flex-wrap">
@@ -44,6 +44,7 @@ export default {
           </fieldset>
         </div>
       </collapsible-accordion>
+      <collapsible-accordion header="Tipos de vagas"></collapsible-accordion>
     </section>
   </div>
 </template>
