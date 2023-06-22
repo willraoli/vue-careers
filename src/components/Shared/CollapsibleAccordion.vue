@@ -36,7 +36,7 @@ export default {
       <iconify-icon :icon="caretIcon" width="12" />
     </div>
     <div v-if="isOpen" class="mt-5 w-full">
-      <slot></slot>
+      <slot>placeholder</slot>
     </div>
   </div>
 </template>
