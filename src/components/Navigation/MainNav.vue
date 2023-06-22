@@ -16,7 +16,7 @@ export default {
     return {
       company: "emprega.ae",
       menuItems: [
-        { label: "Equipes", href: "/" },
+        { label: "Equipes", href: "/equipes" },
         { label: "Locais", href: "/" },
         { label: "Alunos", href: "/" },
         { label: "Vagas", href: "/vagas/resultados" }
