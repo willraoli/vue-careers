@@ -23,10 +23,10 @@ describe("actions", () => {
   });
 
   describe("FETCH_JOBS", () => {
-    it("faz a request na API e armazena as vagas recebidas", () => {
+    it("faz a request na API e armazena as vagas recebidas", async () => {
       (axios.get as Mock).mockResolvedValue({ data: ["Vaga 1", "Vaga 2"] });
       const store = useJobsStore();
-      store.FETCH_JOBS();
+      await store.FETCH_JOBS();
 
       expect(store.jobs).toEqual(["Vaga 1", "Vaga 2"]);
     });
