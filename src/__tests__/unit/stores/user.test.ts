@@ -11,6 +11,12 @@ describe("state", () => {
 
     expect(store.isLoggedIn).toBe(false);
   });
+
+  it("retorna empresas que o usuário selecionou", () => {
+    const store = useUserStore();
+
+    expect(store.selectedOrgs).toEqual([]);
+  });
 });
 
 describe("actions", () => {
@@ -23,5 +29,12 @@ describe("actions", () => {
     store.loginUser();
 
     expect(store.isLoggedIn).toBe(true);
+  });
+
+  it("adiciona uma empresa à selectedOrgs", () => {
+    const store = useUserStore();
+    store.addSelectedOrgs(["Google"]);
+
+    expect(store.selectedOrgs).toEqual(["Google"]);
   });
 });
