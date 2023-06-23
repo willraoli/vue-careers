@@ -17,6 +17,12 @@ describe("state", () => {
 
     expect(store.selectedOrgs).toEqual([]);
   });
+
+  it("retorna os tipos de vaga que o usuário selecionou", () => {
+    const store = useUserStore();
+
+    expect(store.selectedJobTypes).toEqual([]);
+  });
 });
 
 describe("actions", () => {
@@ -31,10 +37,17 @@ describe("actions", () => {
     expect(store.isLoggedIn).toBe(true);
   });
 
-  it("adiciona uma empresa à selectedOrgs", () => {
+  it("adiciona uma empresa às selectedOrgs", () => {
     const store = useUserStore();
     store.addSelectedOrgs(["Google"]);
 
     expect(store.selectedOrgs).toEqual(["Google"]);
+  });
+
+  it("adiciona um tipo de vaga aos selectedJobTypes", () => {
+    const store = useUserStore();
+    store.addSelectedJobTypes(["JobType"]);
+
+    expect(store.selectedJobTypes).toEqual(["JobType"]);
   });
 });
