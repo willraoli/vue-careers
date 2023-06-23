@@ -1,18 +1,18 @@
 import { render, screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { createTestingPinia } from "@pinia/testing";
-import { UNIQUE_ORGS, useJobsStore } from "@/stores/jobs";
+import { useJobsStore } from "@/stores/jobs";
 import { useUserStore } from "@/stores/user";
-import JobFiltersSidebarOrganizations from "@/components/JobResults/JobFiltersSidebar/JobFiltersSidebarOrganizations.vue";
+import JobFiltersSidebarJobTypes from "@/components/JobResults/JobFiltersSidebar/JobFiltersSidebarJobTypes.vue";
 
-describe("JobFiltersSidebarOrganizations", () => {
-  const renderJobFiltersSidebarOrganizations = () => {
+describe("JobFiltersSidebarJobTypes", () => {
+  const renderJobFiltersSidebarJobTypes = () => {
     const pinia = createTestingPinia();
     const jobsStore = useJobsStore();
     const userStore = useUserStore();
     const $router = { push: vi.fn() };
 
-    render(JobFiltersSidebarOrganizations, {
+    render(JobFiltersSidebarJobTypes, {
       global: {
         plugins: [pinia],
         stubs: {
@@ -27,31 +27,31 @@ describe("JobFiltersSidebarOrganizations", () => {
     return { jobsStore, userStore, $router };
   };
 
-  it("renderiza empresas únicas (um set) a partir das vagas", async () => {
-    const { jobsStore } = renderJobFiltersSidebarOrganizations();
+  it("renderiza tipos de vaga únicos (um set) a partir das vagas", async () => {
+    const { jobsStore } = renderJobFiltersSidebarJobTypes();
     // @ts-expect-error: Getter is read only
-    jobsStore[UNIQUE_ORGS] = new Set(["Google", "Amazon"]);
+    jobsStore.uniqueJobTypes = new Set(["Google", "Amazon"]);
 
     const btn = screen.getByRole("button", {
-      name: /empresas/i
+      name: /tipos de vaga/i
     });
 
     await userEvent.click(btn);
 
-    const orgItems = screen.getAllByRole("listitem");
-    const orgs = orgItems.map((item) => item.textContent);
+    const jobTypeItems = screen.getAllByRole("listitem");
+    const jobTypes = jobTypeItems.map((item) => item.textContent);
 
-    expect(orgs).toEqual(["Google", "Amazon"]);
+    expect(jobTypes).toEqual(["Google", "Amazon"]);
   });
 
-  describe("quando o usuário seleciona uma empresa", () => {
-    it("renderiza somente vagas da empresa selecionada", async () => {
-      const { jobsStore, userStore } = renderJobFiltersSidebarOrganizations();
+  describe("quando o usuário seleciona um tipo de vaga", () => {
+    it("renderiza somente vagas do tipo selecionado", async () => {
+      const { jobsStore, userStore } = renderJobFiltersSidebarJobTypes();
       // @ts-expect-error: Getter is read only
-      jobsStore[UNIQUE_ORGS] = new Set(["Google", "Amazon"]);
+      jobsStore.uniqueJobTypes = new Set(["Google", "Amazon"]);
 
       const orgsBtn = screen.getByRole("button", {
-        name: /empresas/i
+        name: /tipos de vaga/i
       });
 
       await userEvent.click(orgsBtn);
@@ -61,17 +61,17 @@ describe("JobFiltersSidebarOrganizations", () => {
       });
 
       await userEvent.click(checkBox);
-      expect(userStore.addSelectedOrgs).toHaveBeenCalledWith(["Google"]);
+      expect(userStore.addSelectedJobTypes).toHaveBeenCalledWith(["Google"]);
     });
 
     describe("quando o usuário clica na checkbox", () => {
       it("redireciona o usuário para a página de vagas", async () => {
-        const { jobsStore, $router } = renderJobFiltersSidebarOrganizations();
+        const { jobsStore, $router } = renderJobFiltersSidebarJobTypes();
         // @ts-expect-error: Getter is read only
-        jobsStore[UNIQUE_ORGS] = new Set(["Google", "Amazon"]);
+        jobsStore.uniqueJobTypes = new Set(["Google", "Amazon"]);
 
         const orgsBtn = screen.getByRole("button", {
-          name: /empresas/i
+          name: /tipos de vaga/i
         });
 
         await userEvent.click(orgsBtn);
