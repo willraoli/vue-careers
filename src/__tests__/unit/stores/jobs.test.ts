@@ -43,9 +43,9 @@ describe("getters", () => {
     it("retorna empresas únicas a partir de uma lista de vagas", () => {
       const store = useJobsStore();
       store.jobs = [
-        { organization: "Google" },
-        { organization: "Amazon" },
-        { organization: "Google" }
+        { organization: "Google", jobType: "" },
+        { organization: "Amazon", jobType: "" },
+        { organization: "Google", jobType: "" }
       ];
       const result = store[UNIQUE_ORGS];
 
@@ -53,40 +53,73 @@ describe("getters", () => {
     });
   });
 
-  describe("filteredJobsByOrg", () => {
-    it("identifica vagas associadas com as empresas selecionadas", () => {
-      const jobsStore = useJobsStore();
-      const userStore = useUserStore();
-
-      jobsStore.jobs = [
-        { organization: "Google" },
-        { organization: "Amazon" },
-        { organization: "Microsoft" }
+  describe("uniqueJobTypes", () => {
+    it("retorna tipos de vagas únicos a partir de uma lista de vagas", () => {
+      const store = useJobsStore();
+      store.jobs = [
+        { organization: "Google", jobType: "Remote" },
+        { organization: "Amazon", jobType: "Remote" },
+        { organization: "Google", jobType: "9-5" }
       ];
-      userStore.selectedOrgs = ["Google", "Amazon"];
 
-      const result = jobsStore.filteredJobsByOrg;
-      expect(result).toEqual([{ organization: "Google" }, { organization: "Amazon" }]);
+      const res = store.uniqueJobTypes;
+
+      expect(res).toEqual(new Set(["Remote", "9-5"]));
     });
+  });
 
-    describe("quando o usuário não seleciona nenhuma empresa", () => {
-      it("retorna todas as empresas", () => {
-        const jobsStore = useJobsStore();
+  describe("includeJobByOrg", () => {
+    describe("quando o usuário não tem uma empresa selecionada", () => {
+      it("inclui todas as vagas", () => {
         const userStore = useUserStore();
+        const jobsStore = useJobsStore();
+        const job = { organization: "Google", jobType: "" };
 
-        jobsStore.jobs = [
-          { organization: "Google" },
-          { organization: "Amazon" },
-          { organization: "Microsoft" }
-        ];
         userStore.selectedOrgs = [];
 
-        const result = jobsStore.filteredJobsByOrg;
-        expect(result).toEqual([
-          { organization: "Google" },
-          { organization: "Amazon" },
-          { organization: "Microsoft" }
-        ]);
+        const result = jobsStore.includeJobByOrg(job);
+
+        expect(result).toBe(true);
+      });
+
+      it("inclui somente as vagas das empresas selecionadas", () => {
+        const userStore = useUserStore();
+        const jobsStore = useJobsStore();
+        const job = { organization: "Google", jobType: "" };
+
+        userStore.selectedOrgs = ["Google", "Microsoft"];
+
+        const result = jobsStore.includeJobByOrg(job);
+
+        expect(result).toBe(true);
+      });
+    });
+  });
+
+  describe("includeJobByJobType", () => {
+    describe("quando o usuário não tem um tipo de vaga selecionado", () => {
+      it("inclui todas as vagas", () => {
+        const userStore = useUserStore();
+        const jobsStore = useJobsStore();
+        const job = { organization: "", jobType: "jobtype" };
+
+        userStore.selectedJobTypes = [];
+
+        const result = jobsStore.includeJobByJobType(job);
+
+        expect(result).toBe(true);
+      });
+
+      it("inclui somente as vagas dos tipos selecionados", () => {
+        const userStore = useUserStore();
+        const jobsStore = useJobsStore();
+        const job = { organization: "", jobType: "Full-time" };
+
+        userStore.selectedJobTypes = ["Full-time"];
+
+        const result = jobsStore.includeJobByJobType(job);
+
+        expect(result).toBe(true);
       });
     });
   });
