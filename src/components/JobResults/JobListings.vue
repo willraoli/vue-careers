@@ -9,7 +9,7 @@ export default {
     JobListing
   },
   computed: {
-    ...mapState(useJobsStore, ["filteredJobsByOrg", "jobs"]),
+    ...mapState(useJobsStore, ["jobs", "filteredJobs"]),
     currentPage() {
       return Number.parseInt((this.$route.query.page as string) || "1");
     },
@@ -20,7 +20,7 @@ export default {
     },
     nextPage() {
       const nextPage = this.currentPage + 1;
-      const maxPage = Math.ceil(this.filteredJobsByOrg.length / 10);
+      const maxPage = Math.ceil(this.filteredJobs.length / 10);
       return nextPage <= maxPage ? nextPage : undefined;
     },
     displayedJobs() {
@@ -28,7 +28,7 @@ export default {
       const firstJobIdx = (pageNumber - 1) * 10;
       const lastJobIdx = pageNumber * 10;
 
-      return this.filteredJobsByOrg.slice(firstJobIdx, lastJobIdx);
+      return this.filteredJobs.slice(firstJobIdx, lastJobIdx);
     }
   },
   async mounted() {
