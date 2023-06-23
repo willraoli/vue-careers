@@ -22,9 +22,7 @@ export default {
           <action-button text="Limpar filtros" type="secondary" />
         </div>
       </div>
-      <collapsible-accordion header="Empresas">
-        <job-filters-sidebar-organizations />
-      </collapsible-accordion>
+      <job-filters-sidebar-organizations />
       <collapsible-accordion header="Formação" />
       <collapsible-accordion header="Tipos de vagas"></collapsible-accordion>
     </section>
