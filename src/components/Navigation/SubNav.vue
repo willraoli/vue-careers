@@ -1,7 +1,11 @@
 <script lang="ts">
+import { mapState } from "pinia";
+import { useJobsStore } from "@/stores/jobs";
+
 export default {
   name: "SubNav",
   computed: {
+    ...mapState(useJobsStore, ["filteredJobsByOrg"]),
     onJobResultsPage() {
       return this.$route.name === "Vagas";
     }
@@ -16,7 +20,10 @@ export default {
   >
     <div class="flex h-full items-center px-8">
       <iconify-icon class="mr-3" icon="material-symbols:search-rounded" width="24" />
-      <span><span class="text-brand-green-1">1234</span> vagas encontradas</span>
+      <span
+        ><span class="text-brand-green-1">{{ filteredJobsByOrg.length }}</span> vagas
+        encontradas</span
+      >
     </div>
   </div>
 </template>
