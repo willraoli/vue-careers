@@ -1,38 +1,28 @@
-<script lang="ts">
+<script setup lang="ts">
 import getNextElement from "@/utils/getNextElement";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-export default {
-  name: "HeadlineSection",
-  data() {
-    return {
-      text: "Vagas",
-      interval: 0
-    };
-  },
-  computed: {
-    animationClasses() {
-      return {
-        [this.text.toLowerCase()]: true
-      };
-    }
-  },
-  created() {
-    this.changeTitle();
-  },
-  beforeUnmount() {
-    window.clearInterval(this.interval);
-  },
-  methods: {
-    changeTitle() {
-      const duration = 3000;
+const text = ref("Vagas");
+const interval = ref<ReturnType<typeof setInterval>>();
 
-      this.interval = window.setInterval(() => {
-        const textArr = ["Vagas", "Empregos", "Cursos"];
-        this.text = getNextElement(textArr, this.text);
-      }, duration);
-    }
-  }
+const animationClasses = computed(() => {
+  return {
+    [text.value.toLowerCase()]: true
+  };
+});
+
+const changeTitle = () => {
+  const duration = 3000;
+
+  interval.value = setInterval(() => {
+    const textArr = ["Vagas", "Empregos", "Cursos"];
+
+    text.value = getNextElement(textArr, text.value);
+  }, duration);
 };
+
+onMounted(changeTitle);
+onBeforeUnmount(() => clearInterval(interval.value));
 </script>
 
 <template>

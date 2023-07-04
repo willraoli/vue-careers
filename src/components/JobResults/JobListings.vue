@@ -1,43 +1,26 @@
-<script lang="ts">
+<script setup lang="ts">
 import JobListing from "@/components/JobResults/JobListing.vue";
 import { useJobsStore, FETCH_JOBS } from "@/stores/jobs";
-import { mapActions, mapState } from "pinia";
+import { usePreviousAndNextPages } from "@/utils/usePreviousAndNextPages";
+import { computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
-export default {
-  name: "JobListings",
-  components: {
-    JobListing
-  },
-  computed: {
-    ...mapState(useJobsStore, ["jobs", "filteredJobs"]),
-    currentPage() {
-      return Number.parseInt((this.$route.query.page as string) || "1");
-    },
-    previousPage() {
-      const firstPage = 1;
-      const previousPage = this.currentPage - 1;
-      return previousPage >= firstPage ? previousPage : undefined;
-    },
-    nextPage() {
-      const nextPage = this.currentPage + 1;
-      const maxPage = Math.ceil(this.filteredJobs.length / 10);
-      return nextPage <= maxPage ? nextPage : undefined;
-    },
-    displayedJobs() {
-      const pageNumber = this.currentPage;
-      const firstJobIdx = (pageNumber - 1) * 10;
-      const lastJobIdx = pageNumber * 10;
+const route = useRoute();
+const jobsStore = useJobsStore();
+const filteredJobs = computed(() => jobsStore.filteredJobs);
+const currentPage = computed(() => Number.parseInt((route.query.page as string) || "1"));
+const maxPage = computed(() => Math.ceil(filteredJobs.value.length / 10));
+const { previousPage, nextPage } = usePreviousAndNextPages(currentPage, maxPage);
 
-      return this.filteredJobs.slice(firstJobIdx, lastJobIdx);
-    }
-  },
-  async mounted() {
-    this[FETCH_JOBS]();
-  },
-  methods: {
-    ...mapActions(useJobsStore, [FETCH_JOBS])
-  }
-};
+const displayedJobs = computed(() => {
+  const pageNumber = currentPage.value;
+  const firstJobIdx = (pageNumber - 1) * 10;
+  const lastJobIdx = pageNumber * 10;
+
+  return filteredJobs.value.slice(firstJobIdx, lastJobIdx);
+});
+
+onMounted(jobsStore[FETCH_JOBS]);
 </script>
 
 <template>

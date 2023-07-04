@@ -1,26 +1,24 @@
-<script lang="ts">
-export default {
-  name: "ActionButton",
-  props: {
-    text: {
-      type: String,
-      required: true
-    },
-    type: {
-      validator(value: string) {
-        return ["primary", "secondary"].includes(value);
-      },
-      default: "primary"
-    }
+<script setup lang="ts">
+import { computed } from "vue";
+
+const props = defineProps({
+  text: {
+    type: String,
+    required: true
   },
-  computed: {
-    btnClass() {
-      return {
-        [this.type]: true
-      };
-    }
+  type: {
+    validator(value: string) {
+      return ["primary", "secondary"].includes(value);
+    },
+    default: "primary"
   }
-};
+});
+
+const btnClass = computed(() => {
+  return {
+    [props.type]: true
+  };
+});
 </script>
 
 <template>

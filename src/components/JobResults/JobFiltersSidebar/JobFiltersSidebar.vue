@@ -1,18 +1,15 @@
-<script lang="ts">
+<script setup lang="ts">
 import ActionButton from "@/components/Shared/ActionButton.vue";
 import CollapsibleAccordion from "@/components/Shared/CollapsibleAccordion.vue";
-import JobFiltersSidebarOrganizations from "@/components/JobResults/JobFiltersSidebar/JobFiltersSidebarOrganizations.vue";
-import JobFiltersSidebarJobTypes from "@/components/JobResults/JobFiltersSidebar/JobFiltersSidebarJobTypes.vue";
+import JobFiltersSidebarCheckboxGroup from "@/components/JobResults/JobFiltersSidebar/JobFiltersSidebarCheckboxGroup.vue";
+import { useUserStore } from "@/stores/user";
+import { UNIQUE_ORGS, useJobsStore } from "@/stores/jobs";
+import { computed } from "vue";
 
-export default {
-  name: "JobFiltersSidebar",
-  components: {
-    ActionButton,
-    CollapsibleAccordion,
-    JobFiltersSidebarOrganizations,
-    JobFiltersSidebarJobTypes
-  }
-};
+const userStore = useUserStore();
+const jobsStore = useJobsStore();
+const uniqueJobs = computed(() => jobsStore.uniqueJobTypes);
+const uniqueOrgs = computed(() => jobsStore[UNIQUE_ORGS]);
 </script>
 
 <template>
@@ -24,8 +21,16 @@ export default {
           <action-button text="Limpar filtros" type="secondary" />
         </div>
       </div>
-      <job-filters-sidebar-organizations />
-      <job-filters-sidebar-job-types />
+      <job-filters-sidebar-checkbox-group
+        header="Empresas"
+        :action="userStore.addSelectedOrgs"
+        :unique-values="uniqueOrgs"
+      />
+      <job-filters-sidebar-checkbox-group
+        header="Tipo de vaga"
+        :action="userStore.addSelectedJobTypes"
+        :unique-values="uniqueJobs"
+      />
       <collapsible-accordion header="Formação" />
     </section>
   </div>

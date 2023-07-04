@@ -1,5 +1,6 @@
-<script lang="ts">
+<script setup lang="ts">
 import axios from "axios";
+import { onMounted, ref } from "vue";
 
 type Spotlight = {
   img: string;
@@ -7,21 +8,16 @@ type Spotlight = {
   description: string;
 };
 
-export default {
-  name: "SpotLight",
-  data() {
-    return {
-      spotlights: [] as Spotlight[]
-    };
-  },
-  async mounted() {
-    const baseUrl = import.meta.env.VITE_APP_API_URL;
-    const url = `${baseUrl}/spotlights`;
+const spotlights = ref<Spotlight[]>([]);
+const getSpotlights = async () => {
+  const baseUrl = import.meta.env.VITE_APP_API_URL;
+  const url = `${baseUrl}/spotlights`;
 
-    const res = await axios.get(url);
-    this.spotlights = res.data;
-  }
+  const res = await axios.get(url);
+  spotlights.value = res.data;
 };
+
+onMounted(getSpotlights);
 </script>
 
 <template>

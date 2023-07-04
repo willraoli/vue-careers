@@ -1,12 +1,7 @@
-<script lang="ts">
+<script setup lang="ts">
 import HeadlineSection from "@/components/JobSearch/HeadlineSection.vue";
 import JobSearchForm from "@/components/JobSearch/JobSearchForm.vue";
 import SpotLight from "@/components/JobSearch/SpotLight.vue";
-
-export default {
-  name: "HeroSection",
-  components: { HeadlineSection, JobSearchForm, SpotLight }
-};
 </script>
 
 <template>
