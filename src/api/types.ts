@@ -1,4 +1,10 @@
 export interface Degree {
   id: number;
-  title: string;
+  degree: string;
+}
+
+export interface Job {
+  organization: string;
+  jobType: string;
+  degree: string;
 }
