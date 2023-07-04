@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import JobListing from "@/components/JobResults/JobListing.vue";
+import { useDegreesStore } from "@/stores/degrees";
 import { useJobsStore, FETCH_JOBS } from "@/stores/jobs";
 import { usePreviousAndNextPages } from "@/utils/usePreviousAndNextPages";
 import { computed, onMounted } from "vue";
@@ -7,6 +8,7 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const jobsStore = useJobsStore();
+const degreesStore = useDegreesStore();
 const filteredJobs = computed(() => jobsStore.filteredJobs);
 const currentPage = computed(() => Number.parseInt((route.query.page as string) || "1"));
 const maxPage = computed(() => Math.ceil(filteredJobs.value.length / 10));
@@ -21,6 +23,7 @@ const displayedJobs = computed(() => {
 });
 
 onMounted(jobsStore[FETCH_JOBS]);
+onMounted(degreesStore.fetchDegrees);
 </script>
 
 <template>
