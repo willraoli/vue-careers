@@ -2,21 +2,19 @@ import SubNav from "@/components/Navigation/SubNav.vue";
 import { useJobsStore } from "@/stores/jobs";
 import { createTestingPinia } from "@pinia/testing";
 import { render, screen } from "@testing-library/vue";
+import type { Mock } from "vitest";
+import { useRoute } from "vue-router";
+
+vi.mock("vue-router");
 
 describe("SubNav", () => {
-  const renderSubNav = (routeName: string) => {
+  const renderSubNav = () => {
     const pinia = createTestingPinia();
     const jobsStore = useJobsStore();
-    const $route = {
-      name: routeName
-    };
 
     render(SubNav, {
       global: {
         plugins: [pinia],
-        mocks: {
-          $route
-        },
         stubs: {
           IconifyIcon: true
         }
@@ -28,7 +26,8 @@ describe("SubNav", () => {
 
   describe("quando o usuário está na página de vagas", () => {
     it("mostra a quantidade de vagas", async () => {
-      const { jobsStore } = renderSubNav("Vagas");
+      (useRoute as Mock).mockReturnValue({ name: "Vagas" });
+      const { jobsStore } = renderSubNav();
       const jobNumber = 10;
       // @ts-expect-error: Getter is read only
       jobsStore.filteredJobs = Array(jobNumber).fill({});
@@ -40,7 +39,8 @@ describe("SubNav", () => {
 
   describe("quando o usuário não está na página de vagas", () => {
     it("não exibe a quantidade de vagas", () => {
-      const { jobsStore } = renderSubNav("Home");
+      (useRoute as Mock).mockReturnValue({ name: "Home" });
+      const { jobsStore } = renderSubNav();
       const jobNumber = 10;
       // @ts-expect-error: Getter is read only
       jobsStore.filteredJobs = Array(jobNumber).fill({});

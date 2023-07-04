@@ -3,18 +3,18 @@ import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/vue";
 import { RouterLinkStub } from "@vue/test-utils";
 import { createTestingPinia } from "@pinia/testing";
+import { useRoute } from "vue-router";
+import type { Mock } from "vitest";
+
+vi.mock("vue-router");
 
 const renderMainNav = () => {
   const pinia = createTestingPinia({ stubActions: false });
-
-  const $route = {
-    name: "Vagas"
-  };
+  (useRoute as Mock).mockReturnValue({ name: "Home" });
 
   render(MainNav, {
     global: {
       plugins: [pinia],
-      mocks: { $route },
       stubs: {
         IconifyIcon: true,
         RouterLink: RouterLinkStub
