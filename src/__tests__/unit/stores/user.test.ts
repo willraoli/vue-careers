@@ -23,6 +23,12 @@ describe("state", () => {
 
     expect(store.selectedJobTypes).toEqual([]);
   });
+
+  it("retorna os títulos que o usuário selecionou para filtrar as vagas", () => {
+    const store = useUserStore();
+
+    expect(store.selectedDegrees).toEqual([]);
+  });
 });
 
 describe("actions", () => {
@@ -49,5 +55,12 @@ describe("actions", () => {
     store.addSelectedJobTypes(["JobType"]);
 
     expect(store.selectedJobTypes).toEqual(["JobType"]);
+  });
+
+  it("adiciona um título aos selectedDegrees", () => {
+    const store = useUserStore();
+    store.addSelectedDegrees(["degree1"]);
+
+    expect(store.selectedDegrees).toEqual(["degree1"]);
   });
 });

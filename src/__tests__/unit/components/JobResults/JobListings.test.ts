@@ -5,6 +5,7 @@ import { createTestingPinia } from "@pinia/testing";
 import { useJobsStore, FETCH_JOBS } from "@/stores/jobs";
 import { useRoute } from "vue-router";
 import type { Mock } from "vitest";
+import { useDegreesStore } from "@/stores/degrees";
 
 vi.mock("vue-router");
 
@@ -31,6 +32,13 @@ describe("JobListings", () => {
     renderJobListings();
     const jobsStore = useJobsStore();
     expect(jobsStore[FETCH_JOBS]).toHaveBeenCalled();
+  });
+
+  it("dá fetch nos títulos", () => {
+    (useRoute as Mock).mockReturnValue({ query: {} });
+    renderJobListings();
+    const degreesStore = useDegreesStore();
+    expect(degreesStore.fetchDegrees).toHaveBeenCalled();
   });
 
   it("cria no máximo 10 anúncios", async () => {

@@ -43,9 +43,9 @@ describe("getters", () => {
     it("retorna empresas únicas a partir de uma lista de vagas", () => {
       const store = useJobsStore();
       store.jobs = [
-        { organization: "Google", jobType: "" },
-        { organization: "Amazon", jobType: "" },
-        { organization: "Google", jobType: "" }
+        { organization: "Google", jobType: "", degree: "" },
+        { organization: "Amazon", jobType: "", degree: "" },
+        { organization: "Google", jobType: "", degree: "" }
       ];
       const result = store[UNIQUE_ORGS];
 
@@ -57,9 +57,9 @@ describe("getters", () => {
     it("retorna tipos de vagas únicos a partir de uma lista de vagas", () => {
       const store = useJobsStore();
       store.jobs = [
-        { organization: "Google", jobType: "Remote" },
-        { organization: "Amazon", jobType: "Remote" },
-        { organization: "Google", jobType: "9-5" }
+        { organization: "Google", jobType: "Remote", degree: "" },
+        { organization: "Amazon", jobType: "Remote", degree: "" },
+        { organization: "Google", jobType: "9-5", degree: "" }
       ];
 
       const res = store.uniqueJobTypes;
@@ -73,7 +73,7 @@ describe("getters", () => {
       it("inclui todas as vagas", () => {
         const userStore = useUserStore();
         const jobsStore = useJobsStore();
-        const job = { organization: "Google", jobType: "" };
+        const job = { organization: "Google", jobType: "", degree: "" };
 
         userStore.selectedOrgs = [];
 
@@ -85,7 +85,7 @@ describe("getters", () => {
       it("inclui somente as vagas das empresas selecionadas", () => {
         const userStore = useUserStore();
         const jobsStore = useJobsStore();
-        const job = { organization: "Google", jobType: "" };
+        const job = { organization: "Google", jobType: "", degree: "" };
 
         userStore.selectedOrgs = ["Google", "Microsoft"];
 
@@ -101,7 +101,7 @@ describe("getters", () => {
       it("inclui todas as vagas", () => {
         const userStore = useUserStore();
         const jobsStore = useJobsStore();
-        const job = { organization: "", jobType: "jobtype" };
+        const job = { organization: "", jobType: "jobtype", degree: "" };
 
         userStore.selectedJobTypes = [];
 
@@ -109,18 +109,45 @@ describe("getters", () => {
 
         expect(result).toBe(true);
       });
+    });
 
-      it("inclui somente as vagas dos tipos selecionados", () => {
+    it("inclui somente as vagas dos tipos selecionados", () => {
+      const userStore = useUserStore();
+      const jobsStore = useJobsStore();
+      const job = { organization: "", jobType: "Full-time", degree: "" };
+
+      userStore.selectedJobTypes = ["Full-time"];
+
+      const result = jobsStore.includeJobByJobType(job);
+
+      expect(result).toBe(true);
+    });
+  });
+
+  describe("includeJobByDegree", () => {
+    describe("quando o usuário não tem nenhum título selecionado", () => {
+      it("inclui todas vagas", () => {
         const userStore = useUserStore();
         const jobsStore = useJobsStore();
-        const job = { organization: "", jobType: "Full-time" };
+        const job = { organization: "", jobType: "", degree: "degree1" };
 
-        userStore.selectedJobTypes = ["Full-time"];
+        userStore.selectedDegrees = [];
 
-        const result = jobsStore.includeJobByJobType(job);
+        const result = jobsStore.includeJobByDegree(job);
 
         expect(result).toBe(true);
       });
+    });
+    it("inclui somente as vagas do tipo selecionado", () => {
+      const userStore = useUserStore();
+      const jobsStore = useJobsStore();
+      const job = { organization: "", jobType: "", degree: "degree1" };
+
+      userStore.selectedDegrees = ["degree1"];
+
+      const result = jobsStore.includeJobByDegree(job);
+
+      expect(result).toBe(true);
     });
   });
 });
