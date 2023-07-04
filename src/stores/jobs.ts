@@ -1,11 +1,7 @@
 import getJobs from "@/api/getJobs";
-import { defineStore } from "pinia";
+import type { Job } from "@/api/types";
 import { useUserStore } from "@/stores/user";
-
-type Job = {
-  organization: string;
-  jobType: string;
-};
+import { defineStore } from "pinia";
 
 export const FETCH_JOBS = "FETCH_JOBS";
 export const UNIQUE_ORGS = "UNIQUE_ORGS";
@@ -55,10 +51,19 @@ export const useJobsStore = defineStore("jobs", {
         return userStore.selectedOrgs.includes(job.organization);
       };
     },
+    includeJobByDegree() {
+      return function (job: Job) {
+        const userStore = useUserStore();
+
+        if (userStore.selectedDegrees.length === 0) return true;
+        return userStore.selectedDegrees.includes(job.degree);
+      };
+    },
     filteredJobs(state): Job[] {
       return state.jobs
         .filter((job) => this.includeJobByOrg(job))
-        .filter((job) => this.includeJobByJobType(job));
+        .filter((job) => this.includeJobByJobType(job))
+        .filter((job) => this.includeJobByDegree(job));
     }
   }
 });
