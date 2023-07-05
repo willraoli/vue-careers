@@ -63,4 +63,16 @@ describe("actions", () => {
 
     expect(store.selectedDegrees).toEqual(["degree1"]);
   });
+
+  it("remove todas empresas, tipos de vaga e níveis de formação", () => {
+    const store = useUserStore();
+    store.addSelectedDegrees(["degree1"]);
+    store.addSelectedJobTypes(["job1"]);
+    store.addSelectedOrgs(["org1"]);
+    store.clearFilters();
+
+    expect(store.selectedDegrees).toEqual([]);
+    expect(store.selectedJobTypes).toEqual([]);
+    expect(store.selectedOrgs).toEqual([]);
+  });
 });

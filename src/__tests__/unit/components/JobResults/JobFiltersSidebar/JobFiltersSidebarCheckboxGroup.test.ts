@@ -4,45 +4,38 @@ import { createTestingPinia } from "@pinia/testing";
 import { useRouter } from "vue-router";
 import type { Mock } from "vitest";
 import JobFiltersSidebarCheckboxGroup from "@/components/JobResults/JobFiltersSidebar/JobFiltersSidebarCheckboxGroup.vue";
+import { useUserStore } from "@/stores/user";
 
 vi.mock("vue-router");
 
 describe("JobFiltersSidebarCheckboxGroup", () => {
   const createProps = (props = {}) => ({
-    header: "Algum header",
     uniqueValues: new Set(["valor1", "valor2"]),
     action: vi.fn(),
     ...props
   });
 
   const renderJobFiltersSidebarCheckboxGroup = (props: {}) => {
-    const pinia = createTestingPinia();
+    const pinia = createTestingPinia({ stubActions: false });
+    const userStore = useUserStore();
 
     render(JobFiltersSidebarCheckboxGroup, {
       props: {
         ...props
       },
       global: {
-        plugins: [pinia],
-        stubs: {
-          IconifyIcon: true
-        }
+        plugins: [pinia]
       }
     });
+
+    return { userStore };
   };
 
-  it("renderiza valores únicos (um set) a partir de uma lista", async () => {
+  it("renderiza valores únicos (um set) a partir de uma lista", () => {
     const props = createProps({
-      header: "Tipos de vaga",
       uniqueValues: new Set(["tipo1", "tipo2"])
     });
     renderJobFiltersSidebarCheckboxGroup(props);
-
-    const btn = screen.getByRole("button", {
-      name: /tipos de vaga/i
-    });
-
-    await userEvent.click(btn);
 
     const jobTypeItems = screen.getAllByRole("listitem");
     const jobTypes = jobTypeItems.map((item) => item.textContent);
@@ -56,17 +49,10 @@ describe("JobFiltersSidebarCheckboxGroup", () => {
       (useRouter as Mock).mockReturnValue({ push });
       const action = vi.fn();
       const props = createProps({
-        header: "Tipos de vaga",
         uniqueValues: new Set(["google", "amazon"]),
         action: action
       });
       renderJobFiltersSidebarCheckboxGroup(props);
-
-      const orgsBtn = screen.getByRole("button", {
-        name: /tipos de vaga/i
-      });
-
-      await userEvent.click(orgsBtn);
 
       const checkBox = screen.getByRole("checkbox", {
         name: /google/i
@@ -82,17 +68,10 @@ describe("JobFiltersSidebarCheckboxGroup", () => {
         (useRouter as Mock).mockReturnValue({ push });
         const action = vi.fn();
         const props = createProps({
-          header: "Tipos de vaga",
           uniqueValues: new Set(["Google"]),
           action: action
         });
         renderJobFiltersSidebarCheckboxGroup(props);
-
-        const orgsBtn = screen.getByRole("button", {
-          name: /tipos de vaga/i
-        });
-
-        await userEvent.click(orgsBtn);
 
         const checkBox = screen.getByRole("checkbox", {
           name: /google/i
@@ -101,6 +80,32 @@ describe("JobFiltersSidebarCheckboxGroup", () => {
         await userEvent.click(checkBox);
         expect(push).toHaveBeenCalledWith({ name: "Vagas" });
       });
+    });
+  });
+
+  describe("quando o usuário limpa os filtros", () => {
+    it("desmarca todas as checkboxes marcadas", async () => {
+      (useRouter as Mock).mockReturnValue({ push: vi.fn() });
+      const action = vi.fn();
+      const props = createProps({
+        uniqueValues: new Set(["Google"]),
+        action: action
+      });
+      const { userStore } = renderJobFiltersSidebarCheckboxGroup(props);
+
+      const checkboxBeforeChecking = screen.getByRole<HTMLInputElement>("checkbox", {
+        name: /google/i
+      });
+
+      await userEvent.click(checkboxBeforeChecking);
+      expect(checkboxBeforeChecking.checked).toBe(true);
+
+      userStore.clearFilters();
+
+      const checkboxAfterChecking = await screen.findByRole<HTMLInputElement>("checkbox", {
+        name: /google/i
+      });
+      expect(checkboxAfterChecking.checked).toBe(false);
     });
   });
 });
