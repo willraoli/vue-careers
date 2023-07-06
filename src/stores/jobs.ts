@@ -67,7 +67,12 @@ export const useJobsStore = defineStore("jobs", {
       return function (job: Job) {
         const userStore = useUserStore();
 
-        return job.title.toLowerCase().includes(userStore.skillsSearchTerm.toLowerCase());
+        return (
+          job.title.toLowerCase().includes(userStore.skillsSearchTerm.toLowerCase()) ||
+          job.degree.toLowerCase().includes(userStore.skillsSearchTerm.toLowerCase()) ||
+          job.jobType.toLowerCase().includes(userStore.skillsSearchTerm.toLowerCase()) ||
+          job.organization.toLowerCase().includes(userStore.skillsSearchTerm.toLowerCase())
+        );
       };
     },
     filteredJobs(state): Job[] {
