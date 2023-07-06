@@ -6,9 +6,13 @@ import { defineStore } from "pinia";
 export const FETCH_JOBS = "FETCH_JOBS";
 export const UNIQUE_ORGS = "UNIQUE_ORGS";
 
+interface JobsState {
+  jobs: Job[];
+}
+
 export const useJobsStore = defineStore("jobs", {
-  state: () => ({
-    jobs: [] as Job[]
+  state: (): JobsState => ({
+    jobs: []
   }),
   actions: {
     async [FETCH_JOBS]() {
@@ -59,11 +63,19 @@ export const useJobsStore = defineStore("jobs", {
         return userStore.selectedDegrees.includes(job.degree);
       };
     },
+    includeJobBySkill() {
+      return function (job: Job) {
+        const userStore = useUserStore();
+
+        return job.title.toLowerCase().includes(userStore.skillsSearchTerm.toLowerCase());
+      };
+    },
     filteredJobs(state): Job[] {
       return state.jobs
         .filter((job) => this.includeJobByOrg(job))
         .filter((job) => this.includeJobByJobType(job))
-        .filter((job) => this.includeJobByDegree(job));
+        .filter((job) => this.includeJobByDegree(job))
+        .filter((job) => this.includeJobBySkill(job));
     }
   }
 });
