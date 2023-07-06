@@ -7,7 +7,7 @@ import { computed, ref } from "vue";
 
 const userStore = useUserStore();
 const loginUser = userStore.loginUser;
-const company = ref("emprega.ae");
+const company = ref("Vue Careers");
 const menuItems = ref([
   { label: "Equipes", href: "/equipes" },
   { label: "Locais", href: "/" },

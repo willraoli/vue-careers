@@ -27,7 +27,7 @@ describe("MainNav", () => {
   it("exibe a logo do site", () => {
     renderMainNav();
 
-    const companyName = screen.getByText("emprega.ae");
+    const companyName = screen.getByText("Vue Careers");
 
     expect(companyName).toBeInTheDocument();
   });

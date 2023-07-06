@@ -32,7 +32,7 @@ onBeforeUnmount(() => clearInterval(interval.value));
       <br />
       para todos
     </h1>
-    <h2 class="text-3xl font-light tracking-tight">Encontre seu próximo desafio no emprega.ae</h2>
+    <h2 class="text-3xl font-light tracking-tight">Encontre seu próximo desafio no Vue Careers</h2>
   </section>
 </template>
 
