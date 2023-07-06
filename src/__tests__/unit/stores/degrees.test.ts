@@ -1,6 +1,6 @@
 import { createPinia, setActivePinia } from "pinia";
 import { useDegreesStore } from "@/stores/degrees";
-import { createDegree } from "../utils/createDegree.test";
+import { createDegree } from "@/api/createDegree";
 import axios from "axios";
 import type { Mock } from "vitest";
 
@@ -44,7 +44,7 @@ describe("getters", () => {
     it("retorna um set com títulos únicos", () => {
       const store = useDegreesStore();
 
-      store.degrees = [createDegree({ title: "degree1" }), createDegree({ title: "degree2" })];
+      store.degrees = [createDegree({ degree: "degree1" }), createDegree({ degree: "degree2" })];
 
       const result = store.uniqueDegrees;
 
