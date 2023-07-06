@@ -7,4 +7,5 @@ export interface Job {
   organization: string;
   jobType: string;
   degree: string;
+  title: string;
 }
