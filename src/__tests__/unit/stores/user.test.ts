@@ -29,6 +29,12 @@ describe("state", () => {
 
     expect(store.selectedDegrees).toEqual([]);
   });
+
+  it("armazena o termo de busca para habilidades e qualificações", () => {
+    const store = useUserStore();
+
+    expect(store.skillsSearchTerm).toBe("");
+  });
 });
 
 describe("actions", () => {
@@ -64,15 +70,24 @@ describe("actions", () => {
     expect(store.selectedDegrees).toEqual(["degree1"]);
   });
 
-  it("remove todas empresas, tipos de vaga e níveis de formação", () => {
+  it("atualiza o termo de busca que o usuário utilizou ao skillsSearchTerm", () => {
+    const store = useUserStore();
+    store.updateSkillsSearchTerm("skill");
+
+    expect(store.skillsSearchTerm).toBe("skill");
+  });
+
+  it("remove todas empresas, tipos de vaga, níveis de formação e termos de busca", () => {
     const store = useUserStore();
     store.addSelectedDegrees(["degree1"]);
     store.addSelectedJobTypes(["job1"]);
     store.addSelectedOrgs(["org1"]);
+    store.skillsSearchTerm = "skill1";
     store.clearFilters();
 
     expect(store.selectedDegrees).toEqual([]);
     expect(store.selectedJobTypes).toEqual([]);
     expect(store.selectedOrgs).toEqual([]);
+    expect(store.skillsSearchTerm).toBe("");
   });
 });
