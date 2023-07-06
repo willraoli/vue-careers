@@ -19,7 +19,7 @@ const skillsSearchTerm = computed({
       v-model.lazy.trim="skillsSearchTerm"
       type="text"
       class="h-12 w-full rounded border border-solid border-brand-gray-1 p-3 text-base shadow-gray"
-      placeholder="Desenvolvedor front-end, Boston, VueTube"
+      placeholder="Desenvolvedor front-end, VueTube, etc"
     />
   </div>
 </template>
