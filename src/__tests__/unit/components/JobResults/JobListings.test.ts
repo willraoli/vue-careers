@@ -6,6 +6,7 @@ import { useJobsStore, FETCH_JOBS } from "@/stores/jobs";
 import { useRoute } from "vue-router";
 import type { Mock } from "vitest";
 import { useDegreesStore } from "@/stores/degrees";
+import type { Job } from "@/api/types";
 
 vi.mock("vue-router");
 
@@ -13,7 +14,13 @@ describe("JobListings", () => {
   const renderJobListings = () => {
     const pinia = createTestingPinia();
     const jobsStore = useJobsStore();
-    jobsStore.jobs = Array(15).fill({}) as [];
+
+    jobsStore.jobs = Array<Job>(15).fill({
+      title: "title",
+      organization: "org",
+      jobType: "jobtype",
+      degree: "degree"
+    });
 
     render(JobListings, {
       global: {
@@ -44,8 +51,6 @@ describe("JobListings", () => {
   it("cria no máximo 10 anúncios", async () => {
     (useRoute as Mock).mockReturnValue({ query: { page: "1" } });
     renderJobListings();
-    const jobsStore = useJobsStore();
-    jobsStore.jobs = Array(15).fill({}) as [];
 
     const jobListings = await screen.findAllByRole("listitem");
     expect(jobListings).toHaveLength(10);
@@ -76,8 +81,6 @@ describe("JobListings", () => {
       (useRoute as Mock).mockReturnValue({ query: { page: "1" } });
 
       renderJobListings();
-      const jobsStore = useJobsStore();
-      jobsStore.jobs = Array(15).fill({}) as [];
 
       await screen.findAllByRole("listitem");
       const previousText = screen.queryByRole("link", {
@@ -91,8 +94,6 @@ describe("JobListings", () => {
       (useRoute as Mock).mockReturnValue({ query: { page: "1" } });
 
       renderJobListings();
-      const jobsStore = useJobsStore();
-      jobsStore.jobs = Array(15).fill({}) as [];
 
       await screen.findAllByRole("listitem");
       const nextText = screen.queryByRole("link", {
@@ -108,8 +109,6 @@ describe("JobListings", () => {
       (useRoute as Mock).mockReturnValue({ query: { page: "2" } });
 
       renderJobListings();
-      const jobsStore = useJobsStore();
-      jobsStore.jobs = Array(15).fill({}) as [];
 
       await screen.findAllByRole("listitem");
       const nextText = screen.queryByRole("link", {
@@ -123,8 +122,6 @@ describe("JobListings", () => {
       (useRoute as Mock).mockReturnValue({ query: { page: "2" } });
 
       renderJobListings();
-      const jobsStore = useJobsStore();
-      jobsStore.jobs = Array(15).fill({}) as [];
 
       await screen.findAllByRole("listitem");
       const previousText = screen.queryByRole("link", {
